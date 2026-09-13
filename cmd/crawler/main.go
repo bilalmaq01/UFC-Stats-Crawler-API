@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"log"
+	"os"
+	"strconv"
 	"ufc_stats_api/internal/config"
 	"ufc_stats_api/internal/crawler"
 
@@ -31,5 +33,24 @@ func main() {
 		r.Headers.Set("Cookie", cfg.Cookie)
 		r.Headers.Set("Upgrade-Insecure-Requests", "1")
 	})
-	crawler.FightCrawler(c, pool)
+	// Mode:
+	//   go run ./cmd/crawler fighters       -> crawl all fighters
+	//   go run ./cmd/crawler fights          -> crawl all events + fights + stats
+	//   go run ./cmd/crawler fights 5        -> crawl only the 5 most recent events
+	mode := "fights"
+	if len(os.Args) > 1 {
+		mode = os.Args[1]
+	}
+	switch mode {
+	case "fighters":
+		crawler.FighterCrawler(c, pool)
+	case "fights":
+		maxEvents := 0
+		if len(os.Args) > 2 {
+			maxEvents, _ = strconv.Atoi(os.Args[2])
+		}
+		crawler.FightCrawler(c, pool, maxEvents)
+	default:
+		log.Fatalf("unknown mode %q (use: fighters | fights [N])", mode)
+	}
 }
