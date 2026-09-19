@@ -1,0 +1,30 @@
+resource "aws_ecr_repository" "crawler" {
+  name                 = var.project
+  image_tag_mutability = "MUTABLE"
+  force_delete         = true
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  tags = local.tags
+}
+
+# Keep the repo tidy: expire untagged images.
+resource "aws_ecr_lifecycle_policy" "crawler" {
+  repository = aws_ecr_repository.crawler.name
+
+  policy = jsonencode({
+    rules = [{
+      rulePriority = 1
+      description  = "Expire untagged images older than 7 days"
+      selection = {
+        tagStatus   = "untagged"
+        countType   = "sinceImagePushed"
+        countUnit   = "days"
+        countNumber = 7
+      }
+      action = { type = "expire" }
+    }]
+  })
+}

@@ -8,7 +8,6 @@ import (
 type Config struct {
 	Port        string
 	DatabaseURL string
-	Cookie      string
 }
 
 func Load() (Config, error) {
@@ -21,11 +20,8 @@ func Load() (Config, error) {
 	if databaseURL == "" {
 		return Config{}, errors.New("DATABASE_URL is required")
 	}
-	cookie := os.Getenv("COOKIE")
-
 	return Config{
 		Port:        port,
 		DatabaseURL: databaseURL,
-		Cookie:      cookie,
 	}, nil
 }

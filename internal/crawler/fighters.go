@@ -33,10 +33,10 @@ func FighterCrawler(c *colly.Collector, pool *pgxpool.Pool) {
 	for _, letter := range "abcdefghijklmnopqrstuvwxyz" {
 		link := fmt.Sprintf("http://www.ufcstats.com/statistics/fighters?char=%c&page=all", letter)
 		c.Visit(link)
-		link = fmt.Sprintf("Visited %s", link)
+		link = fmt.Sprintf("Queued %s", link)
 		fmt.Println(link)
 	}
-
+	c.Wait()
 }
 func parseFighterDetail(e *colly.HTMLElement) models.Fighter {
 	var fighter models.Fighter

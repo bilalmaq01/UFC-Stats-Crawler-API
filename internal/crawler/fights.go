@@ -5,6 +5,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"sync/atomic"
 	"time"
 	"ufc_stats_api/internal/models"
 	"ufc_stats_api/internal/storage"
@@ -15,13 +16,14 @@ import (
 )
 
 func FightCrawler(c *colly.Collector, pool *pgxpool.Pool, maxEvents int) {
-	eventsSeen := 0
+	var eventsSeen atomic.Int64
 	// --- events list page: insert the event, then visit its page ---
 	c.OnHTML("tr.b-statistics__table-row a.b-link", func(e *colly.HTMLElement) {
-		if maxEvents > 0 && eventsSeen >= maxEvents {
+		// Atomically claim a slot: the first maxEvents callbacks get 1..maxEvents
+		// and proceed; the rest exceed the limit and bail.
+		if maxEvents > 0 && eventsSeen.Add(1) > int64(maxEvents) {
 			return
 		}
-		eventsSeen++
 		var event models.Event
 		event.EventName = strings.TrimSpace(e.Text)
 		eventDate := strings.TrimSpace(e.DOM.Parent().Find("span.b-statistics__date").Text())
@@ -73,6 +75,7 @@ func FightCrawler(c *colly.Collector, pool *pgxpool.Pool, maxEvents int) {
 	})
 
 	c.Visit("http://ufcstats.com/statistics/events/completed?page=all")
+	c.Wait()
 	fmt.Println("crawl complete")
 }
 

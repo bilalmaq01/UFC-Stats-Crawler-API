@@ -1,0 +1,29 @@
+# VCS / tooling
+.git
+.github
+.idea
+.claude
+.codex
+.agents
+
+# Secrets / local env
+.env
+.env.*
+!.env.example
+
+# Infra + docs (not needed in the build context)
+infra/
+*.md
+
+# Go build/test output
+bin/
+*.test
+*.out
+coverage.out
+
+# Docker
+Dockerfile
+.dockerignore
+
+# OS
+.DS_Store

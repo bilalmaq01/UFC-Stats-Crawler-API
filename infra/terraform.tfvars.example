@@ -1,0 +1,19 @@
+# Copy to terraform.tfvars (gitignored) and fill in. Never commit real secrets.
+
+aws_region = "us-east-1"
+project    = "ufc-crawler"
+image_tag  = "latest"
+
+task_cpu    = "512"
+task_memory = "1024"
+
+# ["all"] = full refresh (all fighters + all events); ["all","5"] = 5 most recent events.
+crawler_command = ["all", "5"]
+
+# 12:00 UTC daily. Use rate(...) or cron(...) as you like.
+schedule_expression = "cron(0 12 * * ? *)"
+schedule_timezone   = "Etc/UTC"
+schedule_enabled    = true
+
+# --- secrets ---
+database_url = "postgres://user:password@your-db-host:5432/ufc_stats"

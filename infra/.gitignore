@@ -1,0 +1,14 @@
+# Local state (using local backend for now)
+*.tfstate
+*.tfstate.*
+.terraform/
+crash.log
+crash.*.log
+
+# Secrets — real vars live here, never commit them
+terraform.tfvars
+*.auto.tfvars
+
+# ...but keep the example and the provider lock file
+!terraform.tfvars.example
+!.terraform.lock.hcl
