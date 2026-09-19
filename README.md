@@ -98,7 +98,8 @@ Go · PostgreSQL · [pgx](https://github.com/jackc/pgx) · [Colly](https://githu
 - [x] Fighter crawler + endpoints
 - [x] Event crawler + endpoints
 - [x] Fight crawler (full historical backfill) + endpoints
-- [ ] Fight stats (per-round breakdown)
-- [ ] Head-to-head fight search (e.g. "Frank Mir vs Tim Sylvia")
-- [ ] Incremental weekly crawler (only new events + affected fighters)
-- [ ] Deploy to AWS
+- [x] Fight stats (per-round breakdown)
+- [x] Head-to-head fight search (e.g. "Frank Mir vs Tim Sylvia")
+- [x] Incremental weekly crawler (only new events + affected fighters)
+- [x] Deploy to AWS
+- [x] Yippie!
